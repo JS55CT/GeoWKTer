@@ -10,6 +10,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ * 
+ * GeoWKTer was derived from and inspired by the work of Wicket.js <https://github.com/arthur-e/Wicket>
  */
 
 var GeoWKTer = (function () {
