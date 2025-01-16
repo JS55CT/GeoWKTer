@@ -1,3 +1,17 @@
+/**
+ * GeoWKTer: WKT to GeoJSON Converter
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
+
 var GeoWKTer = (function() {
 
     function GeoWKTer() {
@@ -143,9 +157,3 @@ var GeoWKTer = (function() {
 
     return GeoWKTer;
 })();
-
-// Usage example for GeometryCollection
-const geoWKTer = new GeoWKTer();
-geoWKTer.read("GEOMETRYCOLLECTION(POINT(4 6),LINESTRING(4 6,7 10))");
-const geoJson = geoWKTer.features;
-console.log(JSON.stringify(geoJson, null, 2));
