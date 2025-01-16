@@ -60,7 +60,7 @@ var GeoWKTer = (function() {
         });
     };
 
-    GeoWKTer.prototype.toJson = function(type, components) {
+    GeoWKTer.prototype.toGeoJSON = function(type, components) {
         var json = {
             type: type[0].toUpperCase() + type.slice(1).toLowerCase()
         };
