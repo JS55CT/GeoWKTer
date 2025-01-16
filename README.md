@@ -1,83 +1,49 @@
-# GeoWKTer
+# GeoWKTer: WKT to GeoJSON Converter
 
-GeoWKTer is a JavaScript utility for converting Well-Known Text (WKT) into GeoJSON format. This tool is essential for web mapping applications where geographic data transformation and visualization are required.
+GeoWKTer is a JavaScript library designed to convert Well-Known Text (WKT) representations of geometries into GeoJSON format. This tool is useful for developers and GIS specialists who need to work with geographic data across different standards.
 
-## Table of Contents
+## Features
 
-- [Overview](#overview)
-- [Installation](#installation)
-- [Usage](#usage)
-- [.read() Method](#read-method)
-- [.toGeoJSON() Method](#togeojson-method)
-- [Example Workflow](#example-workflow)
-- [License](#license)
-
-## Overview
-
-The `GeoWKTer` class provides key functionality to transform WKT representations into GeoJSON objects. It comprises methods that facilitate this conversion, primarily through its `.read()` and `.toGeoJSON()` methods.
-
-## Installation
-
-To use `GeoWKTer`, include it in your JavaScript project.
+- Supports conversion of various WKT geometry types including POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, and GEOMETRYCOLLECTION.
+- Handles multi-line WKT inputs.
+- Provides a streamlined API for converting WKT to GeoJSON FeatureCollections.
 
 ## Usage
 
-### .read() Method
-
-- **Purpose**: Parses the input WKT string and converts it into an internal geometric representation.
-- **Inputs**:
-  - `wktText`: A string with one or more WKT geometry definitions, separated by newlines if multiple.
-  - `label` (optional): A label for the parsed features, with a default value `'Unnamed'` if unspecified.
-- **Process**:
-  - Splits and cleans the WKT string into individual lines for parsing.
-  - Identifies each geometric entity by its type (e.g., Point, Polygon) using a regular expression.
-  - Constructs an internal representation through handlers specific to geometry types, which are stored in the `features` array. Each entry represents a GeoJSON structure with type, coordinates, and properties.
-
-### .toGeoJSON() Method
-
-- **Purpose**: Converts the internal representation into a GeoJSON object compatible with various applications.
-- **Inputs**: None.
-- **Output**: Returns a GeoJSON `FeatureCollection` object.
-- **Process**:
-  - Compiles features from the `features` array into a single `FeatureCollection`.
-  - Ensures each feature is structured according to the GeoJSON format, facilitated by the initial parsing via `.read()`.
-
-## Example Workflow
+Here's a basic example of how to use the GeoWKTer library:
 
 ```javascript
-// Example WKT string
-const wktString = 'POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))';
+// Initialize the GeoWKTer instance
+let geoWKTer = new GeoWKTer();
+
+// Example WKT input
+let wktText = `
+GEOMETRYCOLLECTION(POINT(4 6), LINESTRING(4 6, 7 10))
+GEOMETRYCOLLECTION(POLYGON((8 4, 11 4, 9 7, 8 4)))
+`;
 
 // Convert WKT to GeoJSON
-const geoWKTer = new GeoWKTer();
-geoWKTer.read(wktString , label );
-const geoJsonData = geoWKTer.toGeoJSON();
+let wktDataArray = geoWKTer.read(wktText, 'Example Label');
+let geoJsonData = geoWKTer.toGeoJSON(wktDataArray);
 
-console.log(geoJsonData);
-
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [30, 10],
-            [40, 40],
-            [20, 40],
-            [10, 20],
-            [30, 10]
-          ]
-        ]
-      },
-      "properties": {
-        "Name": "label" // Optional label string if provided
-      }
-    }
-  ]
-}
+// Output GeoJSON
+console.log(JSON.stringify(geoJsonData, null, 2));
 ```
+
+## API
+
+### GeoWKTer
+
+- **read(wktText, label):** Parses a WKT string and returns an array of geometry objects. It splits multi-line WKT text and labels each geometry.
+
+- **toGeoJSON(dataArray):** Converts the parsed WKT data array into a GeoJSON `FeatureCollection`.
+
 ## License
-This project is licensed under the MIT License. See the LICENSE file for further details.
+
+GeoWKTer is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more details.
+
+## Acknowledgments
+
+GeoWKTer was derived from and inspired by the work of [Wicket](https://github.com/arthur-e/Wicket), authored by K. Arthur Endsley at the Michigan Tech Research Institute (MTRI). Wicket is shared under the terms of the GNU General Public License. We extend our gratitude for this foundational work. For more information on the original project, please refer to the [Wicket repository](https://github.com/arthur-e/Wicket).
+
+Inspired by the need to bridge WKT with GeoJSON for versatile geographic data transformations.
