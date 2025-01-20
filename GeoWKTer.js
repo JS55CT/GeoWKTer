@@ -1,4 +1,13 @@
-/**
+// ==UserScript==
+// @name                GeoWKTer
+// @namespace           https://github.com/JS55CT
+// @description         GeoWKTer is a JavaScript library designed to convert Well-Known Text (WKT) representations of geometries into GeoJSON format.
+// @version             1.0.0
+// @author              JS55CT
+// @license             GNU GPLv3
+// ==/UserScript==
+
+/***************************************
  * GeoWKTer: WKT to GeoJSON Converter
  *
  * This program is free software: you can redistribute it and/or modify
@@ -10,9 +19,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * GeoWKTer was derived from and inspired by the work of Wicket.js <https://github.com/arthur-e/Wicket>
- */
+ **********************************************/
 
 var GeoWKTer = (function () {
   /**
@@ -56,33 +65,51 @@ var GeoWKTer = (function () {
    * @returns {Array} - An array of objects representing parsed WKT geometries.
    */
   GeoWKTer.prototype.read = function (wktText, label) {
-    const lines = wktText.trim().split(/\r?\n/);
+    // Removing unnecessary whitespace
+    wktText = wktText.trim();
 
-    const results = lines.map((line) => {
+    // Check for empty input
+    if (wktText === "") {
+      throw new Error("Empty WKT input.");
+    }
+
+    // Check for balanced parentheses
+    const openParenCount = (wktText.match(/\(/g) || []).length;
+    const closeParenCount = (wktText.match(/\)/g) || []).length;
+    if (openParenCount !== closeParenCount) {
+      throw new Error("Unbalanced parentheses detected in WKT input.");
+    }
+
+    const expectedTypes = /^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)$/i;
+    const lines = wktText.split(/\r?\n/);
+
+    const results = lines.map((line, index) => {
       line = line.trim();
       if (line) {
         const matches = this.regExes.typeStr.exec(line);
         if (matches) {
-          const type = matches[1].toLowerCase();
+          const type = matches[1].toUpperCase();
+          if (!expectedTypes.test(type)) {
+            throw new Error(`Unsupported Geometric object type: ${type} found`);
+          }
+
           const base = matches[2];
-          if (this.ingest[type]) {
-            const components = this.ingest[type].call(this, base);
-            // Return an object with the necessary parts and the label
+
+          try {
+            const components = this.ingest[type.toLowerCase()].call(this, base);
             return { type, components, label };
-          } else {
-            console.error("Unsupported WKT type:", type);
+          } catch (parseError) {
+            throw new Error(`Error parsing WKT component on line ${index + 1}:`, parseError);
           }
         } else {
-          console.error("Invalid WKT string:", line);
+          throw new Error(`Invalid WKT structure on line ${index + 1}`);
         }
       }
-      return null; // Return null if there is an error
+      return null;
     });
 
-    // Filter out null results in case any line was invalid
     return results.filter((result) => result !== null);
   };
-
   /**
    * Converts an array of parsed WKT objects into a GeoJSON FeatureCollection.
    *
