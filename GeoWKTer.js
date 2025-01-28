@@ -5,6 +5,7 @@
 // @version             2.0.0
 // @author              JS55CT
 // @license             GNU GPLv3
+// @match              *://this-library-is-not-supposed-to-run.com/*
 // ==/UserScript==
 
 /***************************************
