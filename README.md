@@ -1,26 +1,22 @@
 # GeoWKTer: WKT to GeoJSON Converter
 
-GeoWKTer is a JavaScript library designed to convert Well-Known Text (WKT) representations of geometries into GeoJSON format. This tool is useful for developers and GIS specialists who need to work with geographic data across different standards.
+GeoWKTer is a JavaScript library designed to facilitate the conversion of Well-Known Text (WKT) geometries into GeoJSON format. This library is especially beneficial for developers and GIS specialists working with geographic data across varying standards. By implementing robust methods for parsing and conversion, GeoWKTer ensures seamless transitions between WKT and GeoJSON representations.
 
 ## Features
 
-- Supports conversion of various WKT geometry types including POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, and GEOMETRYCOLLECTION.
-- Handles multi-line WKT inputs.
-- Provides a streamlined API for converting WKT to GeoJSON FeatureCollections.
+- **Support for Various WKT Types**: Accurately converts diverse geometry types, including `POINT`, `LINESTRING`, `POLYGON`, `MULTIPOINT`, `MULTILINESTRING`, `MULTIPOLYGON`, and `GEOMETRYCOLLECTION`.
+- **Streamlined API**: Provides a simple and intuitive interface for converting WKT inputs into GeoJSON `FeatureCollections`.
 
 ## Usage
 
-Here's a basic example of how to use the GeoWKTer library:
+Below is a basic example of how to use the GeoWKTer library:
 
 ```javascript
 // Initialize the GeoWKTer instance
 let geoWKTer = new GeoWKTer();
 
 // Example WKT input
-let wktText = `
-GEOMETRYCOLLECTION(POINT(4 6), LINESTRING(4 6, 7 10))
-GEOMETRYCOLLECTION(POLYGON((8 4, 11 4, 9 7, 8 4)))
-`;
+let wktText = "GEOMETRYCOLLECTION(POINT(4 6), LINESTRING(4 6, 7 10))";
 
 // Convert WKT to GeoJSON
 let wktDataArray = geoWKTer.read(wktText, 'Example Label');
@@ -34,16 +30,21 @@ console.log(JSON.stringify(geoJsonData, null, 2));
 
 ### GeoWKTer
 
-- **read(wktText, label):** Parses a WKT string and returns an array of geometry objects. It splits multi-line WKT text and labels each geometry.
+- **read(wktText, label):** 
+  - **Description**: Parses a WKT string into an array of geometry objects. Assigns a specified label to each parsed geometry.
+  - **Parameters**:
+    - `wktText` (string): The Well-Known Text string representing the geometries.
+    - `label` (string): An optional label to associate with the geometries for identification or classification.
 
-- **toGeoJSON(dataArray):** Converts the parsed WKT data array into a GeoJSON `FeatureCollection`.
+- **toGeoJSON(dataArray):**
+  - **Description**: Converts an array of parsed WKT data into a GeoJSON `FeatureCollection`.
+  - **Parameters**:
+    - `dataArray` (Object[]): The internal data array produced by the `read` method, ready for transformation into GeoJSON format.
 
 ## License
 
-GeoWKTer is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more details.
+GeoWKTer is licensed under the GNU General Public License v3.0. For more details, please see the [LICENSE](LICENSE) file.
 
 ## Acknowledgments
 
-GeoWKTer was derived from and inspired by the work of [Wicket](https://github.com/arthur-e/Wicket), authored by K. Arthur Endsley at the Michigan Tech Research Institute (MTRI). Wicket is shared under the terms of the GNU General Public License. We extend our gratitude for this foundational work. For more information on the original project, please refer to the [Wicket repository](https://github.com/arthur-e/Wicket).
-
-Inspired by the need to bridge WKT with GeoJSON for versatile geographic data transformations.
+GeoWKTer is also inspired by the work of [Wicket.js](https://github.com/arthur-e/Wicket) and [Terraformer](https://github.com/terraformer-js/terraformer/tree/main).
