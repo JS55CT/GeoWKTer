@@ -43,7 +43,7 @@ console.log(JSON.stringify(geoJsonData, null, 2));
 
 ## License
 
-GeoWKTer is licensed under the GNU General Public License v3.0. For more details, please see the [LICENSE](LICENSE) file.
+GeoWKTer is licensed under the MIT License. For more details, please see the [LICENSE](LICENSE) file.
 
 ## Acknowledgments
 
