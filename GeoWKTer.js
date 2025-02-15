@@ -2,7 +2,7 @@
 // @name                GeoWKTer
 // @namespace           https://github.com/JS55CT
 // @description         geoWKTer is a JavaScript library designed to convert WKT data into GeoJSON format efficiently. It supports conversion of Point, LineString, Polygon, and MultiGeometry elements.
-// @version             2.0.0
+// @version             2.1.0
 // @author              JS55CT
 // @license             MIT
 // @match              *://this-library-is-not-supposed-to-run.com/*
@@ -15,37 +15,6 @@
  * It initializes regex patterns used for parsing WKT, and offers a structure to hold
  * spatial features processed from those strings.
  *
- * **Initialization**:
- * - `this.features`: Initializes a member array intended to hold spatial feature 
- *   objects derived from parsed WKT strings. This can be used to store pieces of
- *   geometry for later retrieval or conversion into GeoJSON.
- * 
- * - `this.regExes`: Sets up a collection of regular expressions critical for 
- *   parsing various components of WKT strings:
- *   - `typeStr`: Matches the spatial type and nested geometries or coordinates in a WKT string.
- *   - `spaces`: Intended to capture spaces or plus symbols, typically for splitting coordinate strings.
- *   - `comma`: Used for splitting coordinate pairs that are comma-separated.
- *   - `parenComma`: Targets polygon or multi-geometries where comma-separated lists of coordinates
- *     need to be split, considering parentheses.
- *
- * **Usage Example**:
- * // Create an instance of GeoWKTer
- * const geoWKT = new GeoWKTer();
- *
- * // Example WKT string of a POINT
- * const pointWKT = "POINT (30 10)";
- *
- * // Label for the geometry
- * const label = "Sample Point";
- *
- * // Convert WKT to internal representation and print
- * const internalData = geoWKT.read(pointWKT, label);
- * console.log("Internal Data:", internalData);
- *
- * // Convert internal representation to GeoJSON and print
- * const geoJSON = geoWKT.toGeoJSON(internalData);
- * console.log("GeoJSON:", geoJSON);
- *
  *  MIT License
  * Copyright (c) 2022 hu de yi
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54,10 +23,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -201,9 +170,12 @@ var GeoWKTer = (function () {
    * 3. Construct FeatureCollection: Wrap the accumulated features array into a
    *    GeoJSON formatted object by designating it as a `FeatureCollection`.
    *
-   * This function effectively bridges the gap between parsed WKT geometries and
-   * the GeoJSON standard, establishing a structure suitable for applications
-   * utilizing GeoJSON data.
+   * WARNING: The input WKT geometries do not include spatial reference system (SRS) information.
+   * This function purely reformats the WKT to GeoJSON without assuming or verifying any particular
+   * coordinate reference system. If the input geometries are not in the standard EPSG:4326 (WGS 84),
+   * the resulting GeoJSON will also lack standard CRS information, which may lead to incorrect spatial
+   * data representation or interpretation.
+   * Users should ensure that the input data is in the intended coordinate system for their applications.
    ****************************************/
   GeoWKTer.prototype.toGeoJSON = function (dataArray) {
     // Reduce the internal data array into a GeoJSON features array
@@ -529,6 +501,6 @@ var GeoWKTer = (function () {
 
     return components; // Return the array of parsed geometry objects
   };
-    
+
   return GeoWKTer;
 })();
