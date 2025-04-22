@@ -178,42 +178,49 @@ var GeoWKTer = (function () {
    * Users should ensure that the input data is in the intended coordinate system for their applications.
    ****************************************/
   GeoWKTer.prototype.toGeoJSON = function (dataArray) {
+    // Mapping object for GeoJSON type conversion
+    const geoJSONTypeMap = {
+      POINT: "Point",
+      LINESTRING: "LineString",
+      POLYGON: "Polygon",
+      MULTIPOINT: "MultiPoint",
+      MULTILINESTRING: "MultiLineString",
+      MULTIPOLYGON: "MultiPolygon",
+      GEOMETRYCOLLECTION: "GeometryCollection",
+    };
+
     // Reduce the internal data array into a GeoJSON features array
     const features = dataArray.reduce((accum, data) => {
       const { type, components, label } = data; // Destructure for ease of use
 
-      // Convert type to title-case to adhere to GeoJSON standards
-      const geoJSONType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+      // Convert type to uppercase and map to correct GeoJSON type
+      const geoJSONType = geoJSONTypeMap[type.toUpperCase()];
 
-      if (geoJSONType === "Geometrycollection" && Array.isArray(components)) {
+      if (geoJSONType === "GeometryCollection" && Array.isArray(components)) {
         // If it's a geometry collection, iterate over its components
         components.forEach((geometry) => {
-          const geometryType = geometry.type.charAt(0).toUpperCase() + geometry.type.slice(1).toLowerCase();
+          const geometryType = geoJSONTypeMap[geometry.type.toUpperCase()];
           accum.push({
-            // Push each as a Feature to the GeoJSON features list
             type: "Feature",
             geometry: {
-              // Define the geometry object for GeoJSON
               type: geometryType,
               coordinates: geometry.coordinates,
             },
             properties: {
-              // Attach properties, including label if provided
               Name: label || "",
             },
           });
         });
-      } else {
+      } else if (geoJSONType) {
         // Handle non-collection geometries directly as a single GeoJSON feature
         accum.push({
           type: "Feature",
           geometry: {
-            // Assign geometry details
             type: geoJSONType,
             coordinates: components,
           },
           properties: {
-            Name: label || "", // Include label as a property if available
+            Name: label || "",
           },
         });
       }
@@ -221,16 +228,16 @@ var GeoWKTer = (function () {
       return accum; // Return the accumulator for the next iteration
     }, []);
 
-    // Return the complete GeoJSON FeatureCollection
+    // Return the complete GeoJSON FeatureCollection with CRS info
     return {
       type: "FeatureCollection",
       crs: {
         type: "name",
         properties: {
-            name: "EPSG:4326"
-        }
-    },
-      features: features, // Embed the compiled features
+          name: "EPSG:4326",
+        },
+      },
+      features: features,
     };
   };
 
