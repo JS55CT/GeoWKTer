@@ -2,7 +2,7 @@
 // @name                GeoWKTer
 // @namespace           https://github.com/JS55CT
 // @description         geoWKTer is a JavaScript library designed to convert WKT data into GeoJSON format efficiently. It supports conversion of Point, LineString, Polygon, and MultiGeometry elements.
-// @version             2.2.1
+// @version             2.3.0
 // @author              JS55CT
 // @license             MIT
 // @match              *://this-library-is-not-supposed-to-run.com/*
