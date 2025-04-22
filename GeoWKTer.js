@@ -2,7 +2,7 @@
 // @name                GeoWKTer
 // @namespace           https://github.com/JS55CT
 // @description         geoWKTer is a JavaScript library designed to convert WKT data into GeoJSON format efficiently. It supports conversion of Point, LineString, Polygon, and MultiGeometry elements.
-// @version             2.1.0
+// @version             2.2.0
 // @author              JS55CT
 // @license             MIT
 // @match              *://this-library-is-not-supposed-to-run.com/*
@@ -182,15 +182,19 @@ var GeoWKTer = (function () {
     const features = dataArray.reduce((accum, data) => {
       const { type, components, label } = data; // Destructure for ease of use
 
-      if (type === "GEOMETRYCOLLECTION" && Array.isArray(components)) {
+      // Convert type to title-case to adhere to GeoJSON standards
+      const geoJSONType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+
+      if (geoJSONType === "Geometrycollection" && Array.isArray(components)) {
         // If it's a geometry collection, iterate over its components
         components.forEach((geometry) => {
+          const geometryType = geometry.type.charAt(0).toUpperCase() + geometry.type.slice(1).toLowerCase();
           accum.push({
             // Push each as a Feature to the GeoJSON features list
             type: "Feature",
             geometry: {
               // Define the geometry object for GeoJSON
-              type: geometry.type,
+              type: geometryType,
               coordinates: geometry.coordinates,
             },
             properties: {
@@ -205,7 +209,7 @@ var GeoWKTer = (function () {
           type: "Feature",
           geometry: {
             // Assign geometry details
-            type: type,
+            type: geoJSONType,
             coordinates: components,
           },
           properties: {
